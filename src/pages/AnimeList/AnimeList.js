@@ -3,7 +3,7 @@ import Card from "../../components/Card/Card";
 import { Link } from 'react-router-dom';
 import Pagination from "../../components/Pagination/Pagination";
 
-function Home() {
+function AnimeList() {
   return (
     <div css={{
       marginTop: '16px',
@@ -42,4 +42,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default AnimeList;
