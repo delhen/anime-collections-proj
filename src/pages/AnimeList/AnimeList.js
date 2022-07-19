@@ -26,7 +26,7 @@ function AnimeList() {
           gridTemplateColumns: 'repeat(4, auto)',
         }
       }}>
-        <Link to="/"><Card /></Link>
+        <Link to="/anime/1"><Card /></Link>
         <Link to="/"><Card /></Link>
         <Link to="/"><Card /></Link>
         <Link to="/"><Card /></Link>
