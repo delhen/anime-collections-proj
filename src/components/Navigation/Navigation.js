@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { Link } from "react-router-dom";
 
 const Navigation = _ => {
   return (
@@ -13,11 +14,19 @@ const Navigation = _ => {
         padding: 0,
         '& li': {
           display: "inline",
-          padding: '8px'
+          padding: '8px',
+          '& a': {
+            color: '#EAF6F6',
+            textDecoration: 'none',
+            fontWeight: 600,
+            '&:hover': {
+              color: '#c9d0d0'
+            }
+          }
         }
       }}>
-        <li>Home</li>
-        <li>My Collections</li>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/collections">My Collections</Link></li>
       </ul>
     </nav>
   );
