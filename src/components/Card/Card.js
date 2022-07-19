@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { Link } from "react-router-dom";
 
 const cardStyle = {
   display: 'flex',
@@ -16,17 +15,15 @@ const Card = (props) => {
         width: '100%',
         position: 'relative',
       }
-    }}>
+    }} onClick={e => e.stopPropagation()}>
       <div className="image-holder">
-        <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png"
+        <img src={props.img_url}
               css={{
                 maxWidth: '100%',
         }} />
       </div>
       <div className="information">
-        <p>Judul: AAA</p>
-        <p>Deskripsi: BBB</p>
-        <p>Rating: 10/10</p>
+        {props.children}
       </div>
     </div>
   );

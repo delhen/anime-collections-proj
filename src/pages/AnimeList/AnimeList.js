@@ -26,16 +26,66 @@ function AnimeList() {
           gridTemplateColumns: 'repeat(4, auto)',
         }
       }}>
-        <Link to="/anime/1"><Card /></Link>
-        <Link to="/"><Card /></Link>
-        <Link to="/"><Card /></Link>
-        <Link to="/"><Card /></Link>
-        <Link to="/"><Card /></Link>
-        <Link to="/"><Card /></Link>
-        <Link to="/"><Card /></Link>
-        <Link to="/"><Card /></Link>
-        <Link to="/"><Card /></Link>
-        <Link to="/"><Card /></Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
+        <Link to="/anime/1">
+          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
+            <p><b>Cowboy Bebop</b></p>
+            <p>Lorem ipsum</p>
+          </Card>
+        </Link>
       </div>
       <Pagination />
     </div>
