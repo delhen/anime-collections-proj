@@ -23,7 +23,7 @@ const Pagination = _ => {
   return (
     <div css={paginationStyle}>
       <a href="#"> ❮ Previous</a>
-      <a href="#"> ❯ Next</a>
+      <a href="#"> Next ❯</a>
     </div>
   );
 };
