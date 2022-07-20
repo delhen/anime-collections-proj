@@ -1,13 +1,10 @@
 /** @jsxImportSource @emotion/react */
+import { getRatingBgColor } from '../../../utils/CommonHelper';
 import { ratingStyle } from './AnimeBodyStyle'
 
 const AnimeBody = (props) => {
-  let ratingBgColor = "";
   const rating = parseInt(props.rating);
-  if(rating > 75) ratingBgColor = "green";
-  else if(rating > 50 && rating <= 75) ratingBgColor = "#D9C52A";
-  else if(rating < 25 && rating >= 50) ratingBgColor = "orange";
-  else ratingBgColor = "red";
+  let ratingBgColor = getRatingBgColor(rating);
 
   return(
     <div>
