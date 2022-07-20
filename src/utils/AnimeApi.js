@@ -26,6 +26,27 @@ export const GET_ANIME_LIST = gql`
   }
 `
 
+export const GET_ANIME_DETAIL = gql`
+query ($id: Int) {
+  Media (id: $id, type: ANIME) {
+    id
+    title {
+    english
+    native
+    }
+    coverImage{
+        large
+    }
+    genres
+    status
+    duration
+    isAdult
+    averageScore
+    description
+  }
+}
+`
+
 export const animeListOptions = (page) => {
   return {
     variables: {"page": page, "perPage": 10}
