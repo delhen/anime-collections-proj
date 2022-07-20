@@ -12,7 +12,7 @@ const Card = (props) => {
   return (
     <div css={cardStyle} onClick={() => goToAnimeDetail(props.id)}>
       <div className="image-holder">
-        <img src={props.img_url} height={300} width={200} />
+        <img src={props.img_url} height={360} />
       </div>
       <div className="information">
         {props.children}
