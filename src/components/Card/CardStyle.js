@@ -4,6 +4,7 @@ export const cardStyle = {
   color: 'black',
   overflow: 'hidden',
   cursor: "pointer",
+  maxWidth: "250px",
   '& .image-holder': {
     width: '100%',
     position: 'relative',
