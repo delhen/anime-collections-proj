@@ -6,7 +6,7 @@ import { GET_ANIME_DETAIL } from "../../utils/AnimeApi";
 import { animeDetailSectionStyle, addCollectionBtnStyle, inputTextStyle, addNewCollectionBtnStyle } from "./AnimeDetailStyle";
 import { useQuery } from "@apollo/client";
 import Spinner from "../../components/Spinner/Spinner";
-import { collectionObjectToArray, createRandomId, getAllCollection, getCollectionFromAnime, getRatingBgColor, getStatusAnime } from "../../utils/CommonHelper";
+import { collectionObjectToArray, createAnimeId, createRandomId, getAllCollection, getCollectionFromAnime, getRatingBgColor, getStatusAnime } from "../../utils/CommonHelper";
 import CollectionList from "../../components/CollectionList/CollectionList";
 import CollectionListModal from "../../components/CollectionListModal/CollectionListModal";
 import { AnimeWithCollectionContext, CollectionContext } from "../../utils/Context";
@@ -35,8 +35,8 @@ function AnimeDetail() {
 
   // Load collections that related to the anime
   let animeWithCollections = [];
-  if(animeWithCollectionsFromContext.animeCollections[anime.id] !== undefined){
-    animeWithCollections = getCollectionFromAnime(animeWithCollectionsFromContext.animeCollections[anime.id]);
+  if(animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)] !== undefined){
+    animeWithCollections = getCollectionFromAnime(animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)]);
   }
   // console.log("animeWithCollectionsFromContext[anime.id]: ", animeWithCollectionsFromContext[anime.id])
   // console.log(animeWithCollections);
@@ -57,15 +57,15 @@ function AnimeDetail() {
         name: name,
         id: id,
         animes: {
-          [anime.id]: newAnimeCollection
+          [createAnimeId(anime.id)]: newAnimeCollection
         }
       }
 
-      if(animeWithCollectionsFromContext.animeCollections[anime.id] !== undefined){
-        animeWithCollectionsFromContext.animeCollections[anime.id].collections[id] = { name: name }
+      if(animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)] !== undefined){
+        animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)].collections[id] = { name: name }
       }else{
-        animeWithCollectionsFromContext.animeCollections[anime.id] = {
-          id: anime.id,
+        animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)] = {
+          id: createAnimeId(anime.id),
           collections: {
             [id]: {
               name: name,
@@ -117,7 +117,7 @@ function AnimeDetail() {
             <input type="text" placeholder="New collection name" css={inputTextStyle} ref={collectionNameRef} />
             <button css={addNewCollectionBtnStyle} onClick={addNewCollection}>+ Collection</button>
           </div>
-          <CollectionListModal collections={collections} animeId={anime.id} />
+          <CollectionListModal collections={collections} anime={anime} closeAfterAdd={() => setShow(false)} />
         </div>
       </Modal>
     </div>
