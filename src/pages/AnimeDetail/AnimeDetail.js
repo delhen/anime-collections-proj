@@ -15,8 +15,8 @@ function AnimeDetail() {
   let params = useParams();
   
   const collectionFromContext = useContext(CollectionContext);
-  const collections = getAllCollection(collectionFromContext);
-  console.log("[AnimeDetail] collections:", collections)
+  const collections = getAllCollection(collectionFromContext.collections);
+  // console.log("[AnimeDetail] collections:", collections)
   // const collections = []
   // console.log(collections);
 
@@ -35,8 +35,8 @@ function AnimeDetail() {
 
   // Load collections that related to the anime
   let animeWithCollections = [];
-  if(animeWithCollectionsFromContext[anime.id] !== undefined){
-    animeWithCollections = getCollectionFromAnime(animeWithCollectionsFromContext[anime.id]);
+  if(animeWithCollectionsFromContext.animeCollections[anime.id] !== undefined){
+    animeWithCollections = getCollectionFromAnime(animeWithCollectionsFromContext.animeCollections[anime.id]);
   }
   // console.log("animeWithCollectionsFromContext[anime.id]: ", animeWithCollectionsFromContext[anime.id])
   // console.log(animeWithCollections);
@@ -53,17 +53,19 @@ function AnimeDetail() {
         coverImage: anime.coverImage.large,
       }
 
-      collectionFromContext[id] = {
+      collectionFromContext.collections[id] = {
         name: name,
+        id: id,
         animes: {
           [anime.id]: newAnimeCollection
         }
       }
 
-      if(animeWithCollectionsFromContext[anime.id] !== undefined){
-        animeWithCollectionsFromContext[anime.id].collections[id] = { name: name }
+      if(animeWithCollectionsFromContext.animeCollections[anime.id] !== undefined){
+        animeWithCollectionsFromContext.animeCollections[anime.id].collections[id] = { name: name }
       }else{
-        animeWithCollectionsFromContext[anime.id] = {
+        animeWithCollectionsFromContext.animeCollections[anime.id] = {
+          id: anime.id,
           collections: {
             [id]: {
               name: name,
@@ -72,8 +74,8 @@ function AnimeDetail() {
         }
       }
 
-      localStorage.setItem("collection-list", JSON.stringify(collectionFromContext));
-      localStorage.setItem("anime-with-collections", JSON.stringify(animeWithCollectionsFromContext));
+      localStorage.setItem("collection-list", JSON.stringify(collectionFromContext.collections));
+      localStorage.setItem("anime-with-collections", JSON.stringify(animeWithCollectionsFromContext.animeCollections));
       alert("Collection Added!");
       setShow(false);
     }

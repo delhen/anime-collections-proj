@@ -8,14 +8,17 @@ import UserCollection from "./pages/UserCollection/UserCollection";
 import CollectionDetail from "./pages/CollectionDetail/CollectionDetail";
 import { AnimeWithCollectionContext, CollectionContext } from "./utils/Context";
 import { initCollectionListObj } from "./utils/CommonHelper";
+import { useState } from "react";
 
 function App() {
+  const [collections, setCollections] = useState(initCollectionListObj('collection-list'))
+  const [animeCollections, setAnimeCollections] = useState(initCollectionListObj('anime-with-collections'))
   return (
     <div className="App">
       <Container>
         <Header />
-        <CollectionContext.Provider value={initCollectionListObj('collection-list')}>
-            <AnimeWithCollectionContext.Provider value={initCollectionListObj('anime-with-collections')}>
+        <CollectionContext.Provider value={{collections, setCollections}}>
+            <AnimeWithCollectionContext.Provider value={{animeCollections, setAnimeCollections}}>
               <Routes>
                 <Route path="/anime/:id" element={<AnimeDetail />} />
                 <Route path="/collections" element={<UserCollection />} />

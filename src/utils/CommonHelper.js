@@ -87,6 +87,20 @@ export const getCollectionFromAnime = (animeObj) => {
   return array;
 }
 
+export const getAnimesFromCollection = (collectionObj) => {
+  const animeKeyList = Object.keys(collectionObj.animes);
+  const array = [];
+
+  animeKeyList.forEach(key => {
+    array.push({
+      id: key,
+      ...collectionObj.animes[key],
+    });
+  })
+
+  return array;
+}
+
 export const getAllCollection = (collections) => {
   // HARDCODE
   const collectionIdList = Object.keys(collections);
