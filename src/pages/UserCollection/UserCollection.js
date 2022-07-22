@@ -1,100 +1,73 @@
 /** @jsxImportSource @emotion/react */
 import Card from "../../components/Card/Card";
-import { Link } from 'react-router-dom';
 import Pagination from "../../components/Pagination/Pagination";
+import CollectionBody from "../../components/Card/CollectionBody/CollectionBody";
+import { addCollectionBtnStyle, addNewCollectionBtnStyle, containerLayout, gridLayout, inputTextStyle } from "./UserCollectionStyle";
+import { useContext, useRef, useState } from "react";
+import { CollectionContext } from "../../utils/Context";
+import { createRandomId, getAllCollection } from "../../utils/CommonHelper";
+import Modal from "../../components/Modal/Modal";
+import noCover from './no_image_cover.jpg';
 
 function UserCollection() {
+  const collectionContext = useContext(CollectionContext);
+  const collections = getAllCollection(collectionContext.collections);
+  const [show, setShow] = useState(false);
+  const collectionNameRef = useRef(null);
+
+  const addNewCollection = () => {
+    if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
+    else{
+      let id = createRandomId()
+      const name = collectionNameRef.current.value;
+
+      collectionContext.collections[id] = {
+        name: name,
+        id: id,
+        animes: {}
+      }
+      localStorage.setItem("collection-list", JSON.stringify(collectionContext.collections));
+      alert("Collection Added!");
+      setShow(false);
+    }
+  }
+
   return (
-    <div css={{
-      marginTop: '8px',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: "center",
-      width: "100%",
-    }}>
-      <button>+ Add New Collection</button>
-      <div css={{
-        display: 'grid',
-        gap: '16px',
-        padding: '16px',
-        gridTemplateColumns: 'repeat(2, auto)',
-        
-        '@media (min-width: 600px)': {
-          gridTemplateColumns: 'repeat(3, auto)',
-        },
-        '@media (min-width: 900px)': {
-          gridTemplateColumns: 'repeat(4, auto)',
+    <div css={containerLayout}>
+      <button css={addCollectionBtnStyle} onClick={() => setShow(true)}>+ Add New Collection</button>
+      <div css={gridLayout}>
+        {
+          collections.map(collection => {
+            const animeKeyList = Object.keys(collection.animes);
+            let imgUrl = null;
+            if(animeKeyList.length === 0){
+              imgUrl = noCover;
+            }else{
+              const firstAnimeKey = animeKeyList[0];
+              const firstAnime = collection.animes[firstAnimeKey];
+              imgUrl = firstAnime.coverImage;
+            }
+          
+            return (
+              <Card img_url={imgUrl} type="collection" key={collection.id} id={collection.id}>
+                <CollectionBody name={collection.name} id={collection.id} />
+              </Card>
+            )
+          })
         }
-      }}>
-        <Link to="/collection/1" css={{
-          textDecoration: "none"
-        }}>
-          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
-            <p><b>My Collection</b></p>
-            <button onClick={e => e.preventDefault()}>Edit</button>
-            <button>Delete</button>
-            <br/>
-            <br/>
-          </Card>
-        </Link>
-        <Link to="/collection/1" css={{
-          textDecoration: "none"
-        }}>
-          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
-            <p><b>My Collection</b></p>
-            <button>Edit</button>
-            <button>Delete</button>
-            <br/>
-            <br/>
-          </Card>
-        </Link>
-        <Link to="/collection/1" css={{
-          textDecoration: "none"
-        }}>
-          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
-            <p><b>My Collection</b></p>
-            <button>Edit</button>
-            <button>Delete</button>
-            <br/>
-            <br/>
-          </Card>
-        </Link>
-        <Link to="/collection/1" css={{
-          textDecoration: "none"
-        }}>
-          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
-            <p><b>My Collection</b></p>
-            <button>Edit</button>
-            <button>Delete</button>
-            <br/>
-            <br/>
-          </Card>
-        </Link>
-        <Link to="/collection/1" css={{
-          textDecoration: "none"
-        }}>
-          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
-            <p><b>My Collection</b></p>
-            <button>Edit</button>
-            <button>Delete</button>
-            <br/>
-            <br/>
-          </Card>
-        </Link>
-        <Link to="/collection/1" css={{
-          textDecoration: "none"
-        }}>
-          <Card img_url="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b5-Zs2cbrglTu67.png">
-            <p><b>My Collection</b></p>
-            <button>Edit</button>
-            <button>Delete</button>
-            <br/>
-            <br/>
-          </Card>
-        </Link>
       </div>
       {/* <Pagination /> */}
+      <Modal show={show} onClose={() => setShow(!show)}>
+        <div>
+          <h4>Add New Collection</h4>
+        </div>
+        <div>
+          <div>
+            <input type="text" placeholder="New collection name" css={inputTextStyle} ref={collectionNameRef} />
+            <button css={addNewCollectionBtnStyle} onClick={addNewCollection}>+ Collection</button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
