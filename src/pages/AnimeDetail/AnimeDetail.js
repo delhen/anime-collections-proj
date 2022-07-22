@@ -10,24 +10,20 @@ import { collectionObjectToArray, createAnimeId, createRandomId, getAllCollectio
 import CollectionList from "../../components/CollectionList/CollectionList";
 import CollectionListModal from "../../components/CollectionListModal/CollectionListModal";
 import { AnimeWithCollectionContext, CollectionContext } from "../../utils/Context";
+import Button from "../../components/Button/Button";
 
 function AnimeDetail() {
-  let params = useParams();
-  
+  const params = useParams();
   const collectionFromContext = useContext(CollectionContext);
-  const collections = getAllCollection(collectionFromContext.collections);
-  // console.log("[AnimeDetail] collections:", collections)
-  // const collections = []
-  // console.log(collections);
-
   const animeWithCollectionsFromContext = useContext(AnimeWithCollectionContext);
-
   const collectionNameRef = useRef(null);
   const [show, setShow] = useState(false);
+
   const { loading, error, data } = useQuery(GET_ANIME_DETAIL, {variables: { id: params.id }});
   if (loading) return <Spinner />;
 
-  
+  // Load collections for listing add anime to collections
+  const collections = getAllCollection(collectionFromContext.collections);  
   const anime = data.Media;
   const rating = parseInt(anime.averageScore), 
       ratingBgColor = getRatingBgColor(rating),
@@ -38,8 +34,6 @@ function AnimeDetail() {
   if(animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)] !== undefined){
     animeWithCollections = getCollectionFromAnime(animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)]);
   }
-  // console.log("animeWithCollectionsFromContext[anime.id]: ", animeWithCollectionsFromContext[anime.id])
-  // console.log(animeWithCollections);
 
   const addNewCollection = () => {
     if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
@@ -105,7 +99,7 @@ function AnimeDetail() {
       </div>
       <h3>Collections</h3>
       <div>
-        <button css={addCollectionBtnStyle} onClick={() => setShow(true)}>+ Add to Collection</button>
+        <Button color="white" clickAction={() => setShow(true)}>+ Add to Collection</Button>
         <CollectionList collections={animeWithCollections} />
       </div>
       <Modal show={show} onClose={() => setShow(!show)}>
@@ -117,7 +111,7 @@ function AnimeDetail() {
         <div>
           <div>
             <input type="text" placeholder="New collection name" css={inputTextStyle} ref={collectionNameRef} />
-            <button css={addNewCollectionBtnStyle} onClick={addNewCollection}>+ Collection</button>
+            <Button color="pink" clickAction={addNewCollection}>+ New</Button>
           </div>
           <CollectionListModal collections={collections} anime={anime} closeAfterAdd={() => setShow(false)} />
         </div>

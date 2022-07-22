@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { getKeyFromObject } from "../../../utils/CommonHelper";
 import { AnimeWithCollectionContext, CollectionContext } from "../../../utils/Context";
+import Button from "../../Button/Button";
 import { btnStyle, editBtnColor, removeBtnColor } from "./CollectionBodyStyle"
 /** @jsxImportSource @emotion/react */
 
@@ -33,8 +34,8 @@ const CollectionBody = props => {
   return (
     <div css={{padding: "4px"}}>
       <p><b>{props.name}</b></p>
-      <button css={{...btnStyle, ...editBtnColor}} onClick={e => e.stopPropagation()}>Edit</button>
-      <button css={{...btnStyle, ...removeBtnColor}} onClick={e => deleteCollection(e)}>Delete</button>
+      <Button color="blue" clickAction={e => e.stopPropagation()}>Edit</Button>
+      <Button color="pink" clickAction={e => deleteCollection(e)}>Delete</Button>
       <br/>
       <br/>
     </div>

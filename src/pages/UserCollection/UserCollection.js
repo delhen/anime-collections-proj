@@ -8,6 +8,7 @@ import { CollectionContext } from "../../utils/Context";
 import { createRandomId, getAllCollection, validateExistingName, validateSpecialChars } from "../../utils/CommonHelper";
 import Modal from "../../components/Modal/Modal";
 import noCover from './no_image_cover.jpg';
+import Button from "../../components/Button/Button";
 
 function UserCollection() {
   const collectionContext = useContext(CollectionContext);
@@ -37,7 +38,7 @@ function UserCollection() {
 
   return (
     <div css={containerLayout}>
-      <button css={addCollectionBtnStyle} onClick={() => setShow(true)}>+ Add New Collection</button>
+      <Button color="white" clickAction={() => setShow(true)}>+ Add New Collection</Button>
       <div css={gridLayout}>
         {
           collections.map(collection => {
@@ -67,7 +68,7 @@ function UserCollection() {
         <div>
           <div>
             <input type="text" placeholder="New collection name" css={inputTextStyle} ref={collectionNameRef} />
-            <button css={addNewCollectionBtnStyle} onClick={addNewCollection}>+ Collection</button>
+            <Button color="pink" clickAction={addNewCollection}>+ New</Button>
           </div>
         </div>
       </Modal>

@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import Button from "../../components/Button/Button";
 import AnimeBody from "../../components/Card/AnimeBody/AnimeBody";
 import Card from "../../components/Card/Card";
 import Modal from "../../components/Modal/Modal";
@@ -52,7 +53,8 @@ const CollectionDetail = (props) => {
 
   return (
     <div css={containerLayout}>
-      <h1>{collectionContext.collections[params.id].name}</h1><button onClick={() => setShow(true)}>Edit Name</button>
+      <h1>{collectionContext.collections[params.id].name}</h1>
+      <Button color="white" clickAction={() => setShow(true)}>Edit Name</Button>
       <h3>Anime List</h3>
       <div css={gridLayout}>
         {
@@ -72,7 +74,7 @@ const CollectionDetail = (props) => {
         <div>
           <div>
             <input type="text" placeholder="New collection name" css={inputTextStyle} ref={collectionNameRef} />
-            <button css={addNewCollectionBtnStyle} onClick={() => editCollectionName()}>Save</button>
+            <Button color="pink" clickAction={() => editCollectionName()}>Save</Button>
           </div>
         </div>
       </Modal>

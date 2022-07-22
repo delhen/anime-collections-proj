@@ -2,6 +2,7 @@
 import { useContext } from 'react';
 import { getRatingBgColor } from '../../../utils/CommonHelper';
 import { CollectionContext, AnimeWithCollectionContext } from '../../../utils/Context';
+import Button from '../../Button/Button';
 import { ratingStyle } from './AnimeBodyStyle'
 
 const AnimeBody = (props) => {
@@ -44,7 +45,8 @@ const AnimeBody = (props) => {
       <p><span css={{...ratingStyle, backgroundColor: ratingBgColor}}>{props.rating}</span></p>
       <p><b>{props.title != null ? props.title : props.title_native}</b></p>
       <p><small><i>{props.title_native != null != "" ? props.title_native : props.title}</i></small></p>
-      {props.showRemove && <button onClick={e => processRemove(e)}>Remove</button>}
+      {props.showRemove 
+          && <Button color="red" clickAction={e => processRemove(e)}>Remove</Button>}
     </div>
   )
 }
