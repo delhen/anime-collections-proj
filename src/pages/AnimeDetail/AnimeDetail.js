@@ -6,7 +6,7 @@ import { GET_ANIME_DETAIL } from "../../utils/AnimeApi";
 import { animeDetailSectionStyle, addCollectionBtnStyle, inputTextStyle, addNewCollectionBtnStyle } from "./AnimeDetailStyle";
 import { useQuery } from "@apollo/client";
 import Spinner from "../../components/Spinner/Spinner";
-import { collectionObjectToArray, createAnimeId, createRandomId, getAllCollection, getCollectionFromAnime, getRatingBgColor, getStatusAnime } from "../../utils/CommonHelper";
+import { collectionObjectToArray, createAnimeId, createRandomId, getAllCollection, getCollectionFromAnime, getRatingBgColor, getStatusAnime, validateCollectionName, validateExistingName, validateSpecialChars } from "../../utils/CommonHelper";
 import CollectionList from "../../components/CollectionList/CollectionList";
 import CollectionListModal from "../../components/CollectionListModal/CollectionListModal";
 import { AnimeWithCollectionContext, CollectionContext } from "../../utils/Context";
@@ -43,6 +43,8 @@ function AnimeDetail() {
 
   const addNewCollection = () => {
     if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
+    else if(validateSpecialChars(collectionNameRef.current.value)) alert("Collection name has special characters!");
+    else if(!validateExistingName(collectionNameRef.current.value, collections)) alert("Collection name already exist!")
     else{
       let id = createRandomId()
       const name = collectionNameRef.current.value;

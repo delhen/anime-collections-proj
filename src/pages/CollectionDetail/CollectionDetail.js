@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import AnimeBody from "../../components/Card/AnimeBody/AnimeBody";
 import Card from "../../components/Card/Card";
 import Modal from "../../components/Modal/Modal";
-import { getAnimeId, getAnimesFromCollection, getKeyFromObject } from "../../utils/CommonHelper";
+import { getAllCollection, getAnimeId, getAnimesFromCollection, getKeyFromObject, validateExistingName, validateSpecialChars } from "../../utils/CommonHelper";
 import { AnimeWithCollectionContext, CollectionContext } from "../../utils/Context";
 import AnimeList from "../AnimeList/AnimeList";
 import { addNewCollectionBtnStyle, containerLayout, gridLayout, inputTextStyle } from "./CollectionDetailStyle";
@@ -20,7 +20,10 @@ const CollectionDetail = (props) => {
   const animeList = getAnimesFromCollection(currentCollection);
   
   const editCollectionName = () => {
+    console.log(CollectionContext)
     if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
+    else if(validateSpecialChars(collectionNameRef.current.value)) alert("Collection name has special characters!");
+    else if(!validateExistingName(collectionNameRef.current.value, getAllCollection(collectionContext.collections))) alert("Collection name already exist!")
     else{
       const newName = collectionNameRef.current.value;
 

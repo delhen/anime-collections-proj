@@ -5,7 +5,7 @@ import CollectionBody from "../../components/Card/CollectionBody/CollectionBody"
 import { addCollectionBtnStyle, addNewCollectionBtnStyle, containerLayout, gridLayout, inputTextStyle } from "./UserCollectionStyle";
 import { useContext, useRef, useState } from "react";
 import { CollectionContext } from "../../utils/Context";
-import { createRandomId, getAllCollection } from "../../utils/CommonHelper";
+import { createRandomId, getAllCollection, validateExistingName, validateSpecialChars } from "../../utils/CommonHelper";
 import Modal from "../../components/Modal/Modal";
 import noCover from './no_image_cover.jpg';
 
@@ -16,7 +16,10 @@ function UserCollection() {
   const collectionNameRef = useRef(null);
 
   const addNewCollection = () => {
+    console.log(collectionContext)
     if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
+    else if(validateSpecialChars(collectionNameRef.current.value)) alert("Collection name has special characters!");
+    else if(!validateExistingName(collectionNameRef.current.value, collections)) alert("Collection name already exist!")
     else{
       let id = createRandomId()
       const name = collectionNameRef.current.value;
