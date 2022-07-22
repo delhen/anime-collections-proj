@@ -52,14 +52,13 @@ const CollectionListModal = props => {
       <ul css={listCollectionModalStyle}>
         {
           props.collections.map((collection, index) => {
-            return <>
-                    <CollectionModal 
-                        clicked={() => addToCollection(collection.id, collection.name, props.anime.id)} 
-                        name={collection.name} 
-                        key={index+1} 
-                        isAlreadyAdded={collection.animes[createAnimeId(props.anime.id)] !== undefined ? true: false} />
-                    <hr css={{margin: 0}} />
-                  </>
+            return <div key={index + 1} >
+              <CollectionModal
+                clicked={() => addToCollection(collection.id, collection.name, props.anime.id)}
+                name={collection.name}
+                isAlreadyAdded={collection.animes[createAnimeId(props.anime.id)] !== undefined ? true : false} />
+              <hr css={{ margin: 0 }} />
+            </div>
           })
         }
       </ul>
