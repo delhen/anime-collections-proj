@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import AnimeBody from "../../components/Card/AnimeBody/AnimeBody";
 import Card from "../../components/Card/Card";
 import Modal from "../../components/Modal/Modal";
-import { getAnimesFromCollection } from "../../utils/CommonHelper";
+import { getAnimeId, getAnimesFromCollection } from "../../utils/CommonHelper";
 import { CollectionContext } from "../../utils/Context";
 import AnimeList from "../AnimeList/AnimeList";
 import { containerLayout, gridLayout } from "./CollectionDetailStyle";
@@ -25,7 +25,7 @@ const CollectionDetail = (props) => {
         {
           animeList.map(anime => {
             return (
-              <Card img_url={anime.coverImage} id={anime.id} key={anime.id}>
+              <Card img_url={anime.coverImage} id={getAnimeId(anime.id)} key={getAnimeId(anime.id)}>
                 <AnimeBody title={anime.title} title_native={anime.native} rating={anime.rating} showRemove={true} fromCollection={params.id} animeId={anime.id} />
               </Card>
             )

@@ -112,3 +112,6 @@ export const getAllCollection = (collections) => {
 
   return array;
 }
+
+export const createAnimeId = (animeId) => 'a-' + animeId;
+export const getAnimeId = (customAnimeId) => customAnimeId.split("-")[1];
