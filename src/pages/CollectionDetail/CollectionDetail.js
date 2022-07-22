@@ -1,25 +1,55 @@
 /** @jsxImportSource @emotion/react */
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import AnimeBody from "../../components/Card/AnimeBody/AnimeBody";
 import Card from "../../components/Card/Card";
 import Modal from "../../components/Modal/Modal";
-import { getAnimeId, getAnimesFromCollection } from "../../utils/CommonHelper";
-import { CollectionContext } from "../../utils/Context";
+import { getAnimeId, getAnimesFromCollection, getKeyFromObject } from "../../utils/CommonHelper";
+import { AnimeWithCollectionContext, CollectionContext } from "../../utils/Context";
 import AnimeList from "../AnimeList/AnimeList";
-import { containerLayout, gridLayout } from "./CollectionDetailStyle";
+import { addNewCollectionBtnStyle, containerLayout, gridLayout, inputTextStyle } from "./CollectionDetailStyle";
 
 const CollectionDetail = (props) => {
   const collectionContext = useContext(CollectionContext);
-  
+  const animeWithCollectionContext = useContext(AnimeWithCollectionContext);
   const params = useParams();
+  const collectionNameRef = useRef(null);
+  const [show, setShow] = useState(false);
+  
   const currentCollection = collectionContext.collections[params.id]
   const animeList = getAnimesFromCollection(currentCollection);
-  console.log(animeList)
+  
+  const editCollectionName = () => {
+    if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
+    else{
+      const newName = collectionNameRef.current.value;
+
+      collectionContext.collections[params.id] = {
+        ...collectionContext.collections[params.id],
+        name: newName
+      }
+
+      const animeCollecitons = animeWithCollectionContext.animeCollections;
+      const keyAnimeCollections = getKeyFromObject(animeCollecitons);
+      keyAnimeCollections.forEach(animeId => {
+        if(animeCollecitons[animeId].collections[params.id] !== undefined){
+          animeCollecitons[animeId].collections[params.id] = {
+            ...animeCollecitons[animeId].collections[params.id],
+            name: newName,
+          }
+        }
+      })
+
+      localStorage.setItem("collection-list", JSON.stringify(collectionContext.collections));
+      localStorage.setItem("anime-with-collections", JSON.stringify(animeWithCollectionContext.animeCollections));
+      alert("Collection successfully edited!");
+      setShow(false);
+    }
+  }
 
   return (
     <div css={containerLayout}>
-      <h1>{collectionContext.collections[params.id].name}</h1>
+      <h1>{collectionContext.collections[params.id].name}</h1><button onClick={() => setShow(true)}>Edit Name</button>
       <h3>Anime List</h3>
       <div css={gridLayout}>
         {
@@ -32,6 +62,17 @@ const CollectionDetail = (props) => {
           })
         }
       </div>
+      <Modal show={show} onClose={() => setShow(!show)}>
+        <div>
+          <h4>Edit Collection Name</h4>
+        </div>
+        <div>
+          <div>
+            <input type="text" placeholder="New collection name" css={inputTextStyle} ref={collectionNameRef} />
+            <button css={addNewCollectionBtnStyle} onClick={() => editCollectionName()}>Save</button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

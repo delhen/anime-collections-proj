@@ -20,3 +20,22 @@ export const gridLayout = {
     gridTemplateColumns: 'repeat(4, auto)',
   }
 }
+
+export const inputTextStyle = {
+  padding: '8px 12px',
+  borderRadius: '4px',
+  borderWidth: '1px'
+}
+
+export const addNewCollectionBtnStyle = {
+  padding: '8px 12px',
+  borderRadius: '4px',
+  margin: '0 4px',
+  borderWidth: '0',
+  backgroundColor: '#FF0063',
+  color: 'white',
+  cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: '#FF3181',
+  }
+}
