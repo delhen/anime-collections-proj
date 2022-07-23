@@ -5,7 +5,11 @@ export const collectionStyle = {
   fontWeight: 'bold',
   borderRadius: '4px',
   textAlign: 'left',
-  margin: "12px 0"
+  margin: "12px 0",
+  cursor: 'pointer',
+  '&:hover, &:active': {
+    backgroundColor: '#dfe7e7'
+  }
 }
 
 export const marginLeftStyle = {

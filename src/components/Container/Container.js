@@ -8,7 +8,8 @@ const Container = props => {
       flexDirection: "column",
       justifyContent: "center",
       width: '100%',
-      maxWidth: '800px'
+      maxWidth: '800px',
+      padding: '8px'
     }}>
       {props.children}
     </div>

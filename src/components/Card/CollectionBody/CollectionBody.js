@@ -34,7 +34,10 @@ const CollectionBody = props => {
   return (
     <div css={{padding: "4px"}}>
       <p><b>{props.name}</b></p>
-      <Button color="blue" clickAction={e => e.stopPropagation()}>Edit</Button>
+      <Button color="blue" clickAction={e => {
+        e.stopPropagation();
+        props.onEdit();
+      }}>Edit</Button>
       <Button color="pink" clickAction={e => deleteCollection(e)}>Delete</Button>
       <br/>
       <br/>

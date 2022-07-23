@@ -29,7 +29,11 @@ export const closeModalBtnStyle = {
   backgroundColor: 'red',
   borderRadius: '8px',
   fontWeight: 'bold',
-  color: 'white'
+  color: 'white',
+  cursor: "pointer",
+  '&:hover, &:active': {
+    backgroundColor: '#cf1a1a'
+  }
 }
 
 export const relativePos = {position: 'relative'}
