@@ -6,18 +6,20 @@ import { GET_ANIME_DETAIL } from "../../utils/AnimeApi";
 import { animeDetailSectionStyle, addCollectionBtnStyle, inputTextStyle, addNewCollectionBtnStyle } from "./AnimeDetailStyle";
 import { useQuery } from "@apollo/client";
 import Spinner from "../../components/Spinner/Spinner";
-import { collectionObjectToArray, createAnimeId, createRandomId, getAllCollection, getCollectionFromAnime, getRatingBgColor, getStatusAnime, validateCollectionName, validateExistingName, validateSpecialChars } from "../../utils/CommonHelper";
+import { collectionObjectToArray, createAnimeId, createRandomId, getAllCollection, getCollectionFromAnime, getRatingBgColor, getStatusAnime, saveDataToStorage } from "../../utils/CommonHelper";
 import CollectionList from "../../components/CollectionList/CollectionList";
 import CollectionListModal from "../../components/CollectionListModal/CollectionListModal";
-import { AnimeWithCollectionContext, CollectionContext } from "../../utils/Context";
+import { AnimeWithCollectionContext, CollectionContext, ModalContext } from "../../utils/Context";
 import Button from "../../components/Button/Button";
+import { addAnimeToExistingCollection, addAnimeToNewCollection } from "../../utils/AnimeHelper";
+import { validateCollectionName } from "../../utils/CollectionHelper";
 
 function AnimeDetail() {
   const params = useParams();
   const collectionFromContext = useContext(CollectionContext);
   const animeWithCollectionsFromContext = useContext(AnimeWithCollectionContext);
+  const modalContext = useContext(ModalContext);
   const collectionNameRef = useRef(null);
-  const [show, setShow] = useState(false);
 
   const { loading, error, data } = useQuery(GET_ANIME_DETAIL, {variables: { id: params.id }});
   if (loading) return <Spinner />;
@@ -36,44 +38,32 @@ function AnimeDetail() {
   }
 
   const addNewCollection = () => {
-    if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
-    else if(validateSpecialChars(collectionNameRef.current.value)) alert("Collection name has special characters!");
-    else if(!validateExistingName(collectionNameRef.current.value, collections)) alert("Collection name already exist!")
-    else{
-      let id = createRandomId()
-      const name = collectionNameRef.current.value;
-      const newAnimeCollection = {
-        title: anime.title.english,
-        native: anime.title.native,
-        rating: anime.averageScore,
-        coverImage: anime.coverImage.large,
-      }
-
-      collectionFromContext.collections[id] = {
-        name: name,
-        id: id,
-        animes: {
-          [createAnimeId(anime.id)]: newAnimeCollection
-        }
-      }
-
-      if(animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)] !== undefined){
-        animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)].collections[id] = { name: name }
-      }else{
-        animeWithCollectionsFromContext.animeCollections[createAnimeId(anime.id)] = {
-          id: createAnimeId(anime.id),
-          collections: {
-            [id]: {
-              name: name,
-            }
-          }
-        }
-      }
-
-      localStorage.setItem("collection-list", JSON.stringify(collectionFromContext.collections));
-      localStorage.setItem("anime-with-collections", JSON.stringify(animeWithCollectionsFromContext.animeCollections));
+    try{
+      const collectionName = collectionNameRef.current.value;
+      validateCollectionName(collectionName, collections);
+      addAnimeToNewCollection(collectionName, anime, collectionFromContext, animeWithCollectionsFromContext);
+      saveDataToStorage(collectionFromContext.collections, animeWithCollectionsFromContext.animeCollections)
+      
       alert("Collection Added!");
-      setShow(false);
+      modalContext.setShowModal(false);
+    }catch(errMsg){
+      alert(errMsg);
+    }
+  }
+
+  const addAnimeWithExistCollection = (collectionId, collectionName, anime, isAlreadyAdded) => {
+    try{
+      const collectionObj = {
+        id: collectionId,
+        name: collectionName,
+      }
+      addAnimeToExistingCollection(collectionObj, anime, collectionFromContext, animeWithCollectionsFromContext, isAlreadyAdded);
+      saveDataToStorage(collectionFromContext.collections, animeWithCollectionsFromContext.animeCollections)
+
+      alert("Anime added to the collection!");
+      modalContext.setShowModal(false);
+    }catch(errMsg){
+      alert(errMsg);
     }
   }
 
@@ -99,21 +89,19 @@ function AnimeDetail() {
       </div>
       <h3>Collections</h3>
       <div>
-        <Button color="white" clickAction={() => setShow(true)}>+ Add to Collection</Button>
+        <Button color="white" clickAction={() => modalContext.setShowModal(true)}>+ Add to Collection</Button>
         <CollectionList collections={animeWithCollections} />
       </div>
-      <Modal show={show} onClose={() => setShow(!show)}>
+      <Modal show={modalContext.showModal} onClose={() => modalContext.setShowModal(false)}>
         <div>
           <h4>Add to Collection</h4>
-          <img src={anime.coverImage.large} width={80} />
-          <p>{anime.title.english}</p>
         </div>
         <div>
           <div>
             <input type="text" placeholder="New collection name" css={inputTextStyle} ref={collectionNameRef} />
             <Button color="pink" clickAction={addNewCollection}>+ New</Button>
           </div>
-          <CollectionListModal collections={collections} anime={anime} closeAfterAdd={() => setShow(false)} />
+          <CollectionListModal collections={collections} anime={anime} collectionClickAction={addAnimeWithExistCollection} />
         </div>
       </Modal>
     </div>
