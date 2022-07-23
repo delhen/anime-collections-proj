@@ -1,3 +1,5 @@
+const REGEX_SPECIAL_CHARS = /[!@#\$%\^\&*\)\(+=._-]+/;
+
 export const getRatingBgColor = (score) => {
   let ratingBgColor = "";
 
@@ -115,8 +117,6 @@ export const getAllCollection = (collections) => {
 
 export const createAnimeId = (animeId) => 'a-' + animeId;
 export const getAnimeId = (customAnimeId) => customAnimeId.split("-")[1];
-
-const REGEX_SPECIAL_CHARS = /[!@#\$%\^\&*\)\(+=._-]+/;
 export const validateSpecialChars = (name) => REGEX_SPECIAL_CHARS.test(name);
 export const validateExistingName = (name, collections) => {
   for(let i=0; i<collections.length; i++){
@@ -124,4 +124,9 @@ export const validateExistingName = (name, collections) => {
   }
 
   return true;
+}
+
+export const saveDataToStorage = (collections, animeWithCollections) => {
+  localStorage.setItem("collection-list", JSON.stringify(collections));
+  localStorage.setItem("anime-with-collections", JSON.stringify(animeWithCollections));
 }
