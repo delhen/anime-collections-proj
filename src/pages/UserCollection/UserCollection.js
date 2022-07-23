@@ -8,7 +8,7 @@ import Button from "../../components/Button/Button";
 import { containerLayout, gridLayout, inputTextStyle } from "./UserCollectionStyle";
 
 import { AnimeWithCollectionContext, CollectionContext, ModalContext } from "../../utils/Context";
-import { createRandomId, getAllCollection, getKeyFromObject, saveDataToStorage, validateExistingName, validateSpecialChars } from "../../utils/CommonHelper";
+import { createRandomId, getAllCollection, getKeyFromObject, saveDataToStorage } from "../../utils/CommonHelper";
 import { processEditCollectionName, validateCollectionName } from "../../utils/CollectionHelper";
 
 import noCover from './no_image_cover.jpg';
@@ -55,23 +55,25 @@ function UserCollection() {
   }
   
   const editCollectionName = (collectionId) => {
-    const newName = collectionNameRef.current.value;
-    validateCollectionName(newName, collections);
-
-    processEditCollectionName(collectionId, newName, collectionContext, animeWithCollectionContext);
-    saveDataToStorage(collectionContext.collections, animeWithCollectionContext.animeCollections);
-    alert("Collection successfully edited!");
-    modalContext.setShowModal(false);
+    try{
+      const newName = collectionNameRef.current.value;
+      validateCollectionName(newName, collections);
+  
+      processEditCollectionName(collectionId, newName, collectionContext, animeWithCollectionContext);
+      saveDataToStorage(collectionContext.collections, animeWithCollectionContext.animeCollections);
+      alert("Collection successfully edited!");
+      modalContext.setShowModal(false);
+    }catch(errMsg){
+      alert(errMsg);
+    }
   }
 
   const addNewCollection = () => {
-    if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
-    else if(validateSpecialChars(collectionNameRef.current.value)) alert("Collection name has special characters!");
-    else if(!validateExistingName(collectionNameRef.current.value, collections)) alert("Collection name already exist!")
-    else{
-      let id = createRandomId()
+    try{
       const name = collectionNameRef.current.value;
+      validateCollectionName(name, collections);
 
+      let id = createRandomId();
       collectionContext.collections[id] = {
         name: name,
         id: id,
@@ -80,6 +82,8 @@ function UserCollection() {
       localStorage.setItem("collection-list", JSON.stringify(collectionContext.collections));
       alert("Collection Added!");
       modalContext.setShowModal(false);
+    }catch(errMsg){
+      alert(errMsg);
     }
   }
 
@@ -97,7 +101,7 @@ function UserCollection() {
       </div>
     </>
   )
-  if(formType == 'edit'){
+  if(formType === 'edit'){
     formAddEdit = (
       <>
         <div>

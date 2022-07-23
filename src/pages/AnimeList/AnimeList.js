@@ -81,7 +81,7 @@ function AnimeList() {
           {
             animeList.map(anime => {
               return (
-                <>
+                <div key={anime.id}>
                   <li css={{
                     padding: '10px',
                     '&:hover, &:active': {
@@ -95,7 +95,7 @@ function AnimeList() {
                     <span>{anime.title.english != null ? anime.title.english : anime.title.native }</span>
                   </li>
                   <hr css={{ margin: 0 }} />
-                </>
+                </div>
               )
             })
           }
