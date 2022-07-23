@@ -12,39 +12,43 @@ const CollectionListModal = props => {
       <h4>You have no collection yet.</h4>
   );
   
-  const addToCollection = (collectionId, collectionName, animeId) => {
-    const newAnimeCollection = {
-      title: props.anime.title.english,
-      native: props.anime.title.native,
-      rating: props.anime.averageScore,
-      coverImage: props.anime.coverImage.large,
-    };
-
-    collectionFromContext.collections[collectionId].animes[createAnimeId(animeId)] = newAnimeCollection;
-    // collectionFromContext.setCollections(collectionFromContext.collections);
-
-    if(animeWithCollectionsFromContext.animeCollections[createAnimeId(animeId)] !== undefined){
-      animeWithCollectionsFromContext.animeCollections[createAnimeId(animeId)].collections[collectionId] = { id: collectionId, name: collectionName };
-    }else{
-      const newAnime = {
-        id: createAnimeId(animeId),
-        collections: {
-          [collectionId]: {
-            id: collectionId,
-            name: collectionName
-          }
-        }
+  const addToCollection = (collectionId, collectionName, animeId, isAlreadyAdded) => {
+    if(!isAlreadyAdded){
+      const newAnimeCollection = {
+        title: props.anime.title.english,
+        native: props.anime.title.native,
+        rating: props.anime.averageScore,
+        coverImage: props.anime.coverImage.large,
       };
-
-      animeWithCollectionsFromContext.animeCollections[createAnimeId(animeId)] = newAnime;
+  
+      collectionFromContext.collections[collectionId].animes[createAnimeId(animeId)] = newAnimeCollection;
+      // collectionFromContext.setCollections(collectionFromContext.collections);
+  
+      if(animeWithCollectionsFromContext.animeCollections[createAnimeId(animeId)] !== undefined){
+        animeWithCollectionsFromContext.animeCollections[createAnimeId(animeId)].collections[collectionId] = { id: collectionId, name: collectionName };
+      }else{
+        const newAnime = {
+          id: createAnimeId(animeId),
+          collections: {
+            [collectionId]: {
+              id: collectionId,
+              name: collectionName
+            }
+          }
+        };
+  
+        animeWithCollectionsFromContext.animeCollections[createAnimeId(animeId)] = newAnime;
+      }
+      animeWithCollectionsFromContext.setAnimeCollections(animeWithCollectionsFromContext.animeCollections);
+  
+      localStorage.setItem("collection-list", JSON.stringify(collectionFromContext.collections));
+      localStorage.setItem("anime-with-collections", JSON.stringify(animeWithCollectionsFromContext.animeCollections));
+      console.log(collectionFromContext.collections)
+      alert("Collection Added!");
+      props.closeAfterAdd();
+    }else{
+      alert("You already add the anime to this collection!")
     }
-    animeWithCollectionsFromContext.setAnimeCollections(animeWithCollectionsFromContext.animeCollections);
-
-    localStorage.setItem("collection-list", JSON.stringify(collectionFromContext.collections));
-    localStorage.setItem("anime-with-collections", JSON.stringify(animeWithCollectionsFromContext.animeCollections));
-    console.log(collectionFromContext.collections)
-    alert("Collection Added!");
-    props.closeAfterAdd();
   }
 
   if(props.collections.length > 0){
@@ -52,11 +56,12 @@ const CollectionListModal = props => {
       <ul css={listCollectionModalStyle}>
         {
           props.collections.map((collection, index) => {
+            const isAlreadyAdded = collection.animes[createAnimeId(props.anime.id)] !== undefined;
             return <div key={index + 1} >
               <CollectionModal
-                clicked={() => addToCollection(collection.id, collection.name, props.anime.id)}
+                clicked={() => addToCollection(collection.id, collection.name, props.anime.id, isAlreadyAdded)}
                 name={collection.name}
-                isAlreadyAdded={collection.animes[createAnimeId(props.anime.id)] !== undefined ? true : false} />
+                isAlreadyAdded={isAlreadyAdded ? true : false} />
               <hr css={{ margin: 0 }} />
             </div>
           })
