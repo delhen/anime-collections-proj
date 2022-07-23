@@ -19,6 +19,23 @@ const CollectionDetail = (props) => {
   
   const currentCollection = collectionContext.collections[params.id]
   const animeList = getAnimesFromCollection(currentCollection);
+
+  let component = <h4>Lets add a new anime for this collection!</h4>
+  if(animeList.length > 0){
+    component = (
+      <div css={gridLayout}>
+        {
+          animeList.map(anime => {
+            return (
+              <Card img_url={anime.coverImage} id={getAnimeId(anime.id)} key={getAnimeId(anime.id)}>
+                <AnimeBody title={anime.title} title_native={anime.native} rating={anime.rating} showRemove={true} fromCollection={params.id} animeId={anime.id} />
+              </Card>
+            )
+          })
+        }
+      </div>
+    )
+  }
   
   const editCollectionName = () => {
     console.log(CollectionContext)
@@ -56,17 +73,7 @@ const CollectionDetail = (props) => {
       <h1>{collectionContext.collections[params.id].name}</h1>
       <Button color="white" clickAction={() => setShow(true)}>Edit Name</Button>
       <h3>Anime List</h3>
-      <div css={gridLayout}>
-        {
-          animeList.map(anime => {
-            return (
-              <Card img_url={anime.coverImage} id={getAnimeId(anime.id)} key={getAnimeId(anime.id)}>
-                <AnimeBody title={anime.title} title_native={anime.native} rating={anime.rating} showRemove={true} fromCollection={params.id} animeId={anime.id} />
-              </Card>
-            )
-          })
-        }
-      </div>
+      {component}
       <Modal show={show} onClose={() => setShow(!show)}>
         <div>
           <h4>Edit Collection Name</h4>
