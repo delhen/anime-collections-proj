@@ -1,57 +1,70 @@
 /** @jsxImportSource @emotion/react */
-import Card from "../../components/Card/Card";
-import Pagination from "../../components/Pagination/Pagination";
-import CollectionBody from "../../components/Card/CollectionBody/CollectionBody";
-import { addCollectionBtnStyle, addNewCollectionBtnStyle, containerLayout, gridLayout, inputTextStyle } from "./UserCollectionStyle";
 import { useContext, useRef, useState } from "react";
-import { AnimeWithCollectionContext, CollectionContext } from "../../utils/Context";
-import { createRandomId, getAllCollection, getAnimesFromCollection, getKeyFromObject, validateExistingName, validateSpecialChars } from "../../utils/CommonHelper";
+
+import Card from "../../components/Card/Card";
+import CollectionBody from "../../components/Card/CollectionBody/CollectionBody";
 import Modal from "../../components/Modal/Modal";
-import noCover from './no_image_cover.jpg';
 import Button from "../../components/Button/Button";
+import { containerLayout, gridLayout, inputTextStyle } from "./UserCollectionStyle";
+
+import { AnimeWithCollectionContext, CollectionContext, ModalContext } from "../../utils/Context";
+import { createRandomId, getAllCollection, getKeyFromObject, saveDataToStorage, validateExistingName, validateSpecialChars } from "../../utils/CommonHelper";
+import { processEditCollectionName, validateCollectionName } from "../../utils/CollectionHelper";
+
+import noCover from './no_image_cover.jpg';
 
 function UserCollection() {
   const collectionContext = useContext(CollectionContext);
-  const collections = getAllCollection(collectionContext.collections);
   const animeWithCollectionContext = useContext(AnimeWithCollectionContext);
-  const [show, setShow] = useState(false);
+  const modalContext = useContext(ModalContext);
+
   const [formType, setFormType] = useState("add");
   const [collectionId, setCollectionId] = useState();
   const [collectionName, setCollectionName] = useState();
   const collectionNameRef = useRef(null);
 
-  const editCollectionName = (collectionId) => {
-    if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
-    else if(validateSpecialChars(collectionNameRef.current.value)) alert("Collection name has special characters!");
-    else if(!validateExistingName(collectionNameRef.current.value, getAllCollection(collectionContext.collections))) alert("Collection name already exist!")
-    else{
-      const newName = collectionNameRef.current.value;
+  const collections = getAllCollection(collectionContext.collections);
 
-      collectionContext.collections[collectionId] = {
-        ...collectionContext.collections[collectionId],
-        name: newName
-      }
+  const editClicked = (e, collectionId, collectionName) => {
+    e.stopPropagation();
+    setCollectionId(collectionId);
+    setCollectionName(collectionName);
+    setFormType("edit");
+    modalContext.setShowModal(true);
+  }
 
-      const animeCollecitons = animeWithCollectionContext.animeCollections;
-      const keyAnimeCollections = getKeyFromObject(animeCollecitons);
+  const deleteCollection = (e, collectionId) => {
+    e.stopPropagation()
+    if(window.confirm("Are you sure want to remove this collection?")){
+      const animeCollections = animeWithCollectionContext.animeCollections;
+      const keyAnimeCollections = getKeyFromObject(animeCollections);
       keyAnimeCollections.forEach(animeId => {
-        if(animeCollecitons[animeId].collections[collectionId] !== undefined){
-          animeCollecitons[animeId].collections[collectionId] = {
-            ...animeCollecitons[animeId].collections[collectionId],
-            name: newName,
-          }
+        if(animeCollections[animeId].collections[collectionId] !== undefined){
+          delete animeCollections[animeId].collections[collectionId];
         }
       })
+      animeWithCollectionContext.setAnimeCollections({...animeCollections});
 
-      localStorage.setItem("collection-list", JSON.stringify(collectionContext.collections));
-      localStorage.setItem("anime-with-collections", JSON.stringify(animeWithCollectionContext.animeCollections));
-      alert("Collection successfully edited!");
-      setShow(false);
+      const collectionReplicate = collectionContext.collections;
+      delete collectionReplicate[collectionId];
+      collectionContext.setCollections({...collectionReplicate});
+
+      saveDataToStorage(collectionReplicate, animeCollections)
+      alert("Collection has been deleted!");
     }
+  }
+  
+  const editCollectionName = (collectionId) => {
+    const newName = collectionNameRef.current.value;
+    validateCollectionName(newName, collections);
+
+    processEditCollectionName(collectionId, newName, collectionContext, animeWithCollectionContext);
+    saveDataToStorage(collectionContext.collections, animeWithCollectionContext.animeCollections);
+    alert("Collection successfully edited!");
+    modalContext.setShowModal(false);
   }
 
   const addNewCollection = () => {
-    console.log(collectionContext)
     if(collectionNameRef.current.value === null || collectionNameRef.current.value === "") alert("Collection name cannot be empty!");
     else if(validateSpecialChars(collectionNameRef.current.value)) alert("Collection name has special characters!");
     else if(!validateExistingName(collectionNameRef.current.value, collections)) alert("Collection name already exist!")
@@ -66,7 +79,7 @@ function UserCollection() {
       }
       localStorage.setItem("collection-list", JSON.stringify(collectionContext.collections));
       alert("Collection Added!");
-      setShow(false);
+      modalContext.setShowModal(false);
     }
   }
 
@@ -116,12 +129,10 @@ function UserCollection() {
           
             return (
               <Card img_url={imgUrl} type="collection" key={collection.id} id={collection.id}>
-                <CollectionBody name={collection.name} id={collection.id} onEdit={() => {
-                  setCollectionId(collection.id);
-                  setCollectionName(collection.name);
-                  setFormType("edit");
-                  setShow(true);
-                }} />
+                <CollectionBody name={collection.name} 
+                  id={collection.id} 
+                  onEdit={editClicked}
+                  onDelete={deleteCollection} />
               </Card>
             )
           })
@@ -133,12 +144,12 @@ function UserCollection() {
   return (
     <div css={containerLayout}>
       <Button color="white" clickAction={() => {
-        setShow(true);
+        modalContext.setShowModal(true);
         setFormType('add');
       }}>+ Add New Collection</Button>
       {component}
       {/* <Pagination /> */}
-      <Modal show={show} onClose={() => setShow(!show)}>
+      <Modal show={modalContext.showModal} onClose={() => modalContext.setShowModal(false)}>
         {formAddEdit}
       </Modal>
     </div>

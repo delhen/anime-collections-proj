@@ -1,16 +1,18 @@
 /** @jsxImportSource @emotion/react */
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
-import Modal from "../../components/Modal/Modal";
-import { GET_ANIME_DETAIL } from "../../utils/AnimeApi";
-import { animeDetailSectionStyle, addCollectionBtnStyle, inputTextStyle, addNewCollectionBtnStyle } from "./AnimeDetailStyle";
 import { useQuery } from "@apollo/client";
+
+import Modal from "../../components/Modal/Modal";
 import Spinner from "../../components/Spinner/Spinner";
-import { collectionObjectToArray, createAnimeId, createRandomId, getAllCollection, getCollectionFromAnime, getRatingBgColor, getStatusAnime, saveDataToStorage } from "../../utils/CommonHelper";
 import CollectionList from "../../components/CollectionList/CollectionList";
 import CollectionListModal from "../../components/CollectionListModal/CollectionListModal";
-import { AnimeWithCollectionContext, CollectionContext, ModalContext } from "../../utils/Context";
 import Button from "../../components/Button/Button";
+import { animeDetailSectionStyle, inputTextStyle } from "./AnimeDetailStyle";
+
+import { GET_ANIME_DETAIL } from "../../utils/AnimeApi";
+import { createAnimeId, getAllCollection, getCollectionFromAnime, getRatingBgColor, getStatusAnime, saveDataToStorage } from "../../utils/CommonHelper";
+import { AnimeWithCollectionContext, CollectionContext, ModalContext } from "../../utils/Context";
 import { addAnimeToExistingCollection, addAnimeToNewCollection } from "../../utils/AnimeHelper";
 import { validateCollectionName } from "../../utils/CollectionHelper";
 
