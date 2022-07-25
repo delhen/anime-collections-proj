@@ -37,6 +37,12 @@ function AnimeList() {
 
   const animeList = data.Page.media;
 
+  const clearAll = () => {
+    modalContext.setShowModal(false); 
+    setSelectedAnimeList([]); 
+    setStep(1);
+  }
+
   const addNewCollection = () => {
     try{
       const collectionName = collectionNameRef.current.value;
@@ -47,7 +53,7 @@ function AnimeList() {
       saveDataToStorage(collectionContext.collections, animeCollectionsContext.animeCollections);
       
       alert("Bulk of animes added to new collection!");
-      modalContext.setShowModal(false);
+      clearAll();
     }catch(errMsg){
       alert(errMsg);
     }
@@ -63,7 +69,7 @@ function AnimeList() {
     saveDataToStorage(collectionContext.collections, animeCollectionsContext.animeCollections);
     
     alert("Bulk of animes added to the collection!");
-    modalContext.setShowModal(false);
+    clearAll();
   }
 
   let formAdd = (
@@ -157,7 +163,7 @@ function AnimeList() {
           onNextPage={() => goToNextPage(currentPage)}
           onPrevPage={() => goToPrevPage(currentPage)}
       />
-      <Modal show={modalContext.showModal} onClose={() => {modalContext.setShowModal(false); setSelectedAnimeList([]); setStep(1)}}>
+      <Modal show={modalContext.showModal} onClose={() => clearAll()}>
         {formAdd}
       </Modal>
     </div>
